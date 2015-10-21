@@ -24,7 +24,7 @@
         <div class="module content">
             <div class="container">
                 <h2>Lorem Ipsum Dolor</h2>
-
+                <a href="login.php">click to login</a>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
             </div>
         </div>
