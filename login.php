@@ -9,6 +9,22 @@
 
 <?php
 
+
+function analyze_attack($data)
+{
+    $attack1 = "";
+    //  (script)|(&lt;)|(&gt;)|(%3c)|(%3e)|(SELECT) |(UPDATE)|(INSERT) |(DELETE)|(GRANT) |(REVOKE)|(UNION)|(&amp;lt;)|(&amp;gt;)
+    if (preg_match("/(<)|(>)|(SELECT)|(UPDATE)|(INSERT)|(DELETE)|(GRANT)
+    |(REVOKE)|(UNION)|(&&)|(&>)|(&<)|(DROP)|(ALTER)|(=)|(==)/i", $data)) {
+        $attack1 = "sql injection";
+    }elseif (preg_match("/(<script>)|(HTML)|(BODY)|(DIV)|(<h.>)|(onclick)
+    |(onchange)|(ondblclick)|(onmouse)|(onselect)|(onsubmit)|(onload)|(alert()|(style)/i", $data)) {
+        $attack1 = "xss attack (stored)";
+    }
+    return $attack1;
+
+}
+
 function test_input($data)
 {
     $data = trim($data);
@@ -53,19 +69,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($_POST["login"]) {
 
+        $loginAttack = "";
+        $emailLoginPost = $passLoginPost = "";
         $emailLogin = $passLogin = "";
         $emailLoginErr = $passLoginErr = "";
 
-        if (empty($_POST["login_email"])) {
+        if (empty($emailLoginPost = $_POST["login_email"])) {
             $emailLoginErr = "email is required";
+            echo $emailLoginErr;
+        } elseif (($attack = analyze_attack($emailLoginPost)) != "") {
+            $emailLoginErr = "we have $attack attack in email field !<br>";
+            echo "\n" . $emailLoginErr;
         } else {
             $emailLogin = test_input($_POST["login_email"]);
-
-
         }
 
-        if (empty($_POST["login_pass"])) {
+        if (empty($passLoginPost = $_POST["login_pass"])) {
             $passLoginErr = "password is required";
+        } elseif (($attack = analyze_attack($passLoginPost)) != "") {
+            $passLoginErr = "we have $attack attack in password field !<br>";
+            echo "\n" . $passLoginErr;
         } else {
             $passLogin = test_input($_POST["login_pass"]);
         }
@@ -99,54 +122,79 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
         } else {
-            echo "فیلدهای لازم پر شوند.";
+            if ($loginAttack == "") echo "فیلدهای لازم پر شوند.";
+            else {
+                echo "we handled the attack <br>";;
+                echo "the attacker's description is : <br>";
+                echo $_SERVER['REMOTE_ADDR'];
+
+            }
         }
 
     } elseif ($_POST["signup"]) {
+
+        $signupAttack = "";
+        $emailSignupPost = $passSignupPost = $nameSignupPost = $fnameSignupPost = $usernameSignupPost = "";
         $emailSignup = $passSignup = $nameSignup = $fnameSignup = $usernameSignup = "";
         $passSignupErr = $passSignupErr = $nameSignupErr = $fnameSignupErr = $usernameSignupErr = "";
 
-        if (empty($_POST["name"])) {
+        if (empty($nameSignupPost = $_POST["name"])) {
             $nameSignupErr = "";
+        } elseif (($attack = analyze_attack($nameSignupPost)) != "") {
+            $nameSignupErr = "we have $attack attack in name field !<br>";
+            $signupAttack = $attack;
+            echo "\n" . $nameSignupErr;
         } else {
             $nameSignup = test_input($_POST["name"]);
 
 
         }
 
-        if (empty($_POST["family-name"])) {
+        if (empty($fnameSignupPost = $_POST["family-name"])) {
             $fnameSignupErr = "";
+        } elseif (($attack = analyze_attack($fnameSignupPost)) != "") {
+            $fnameSignupErr = "we have $attack attack in familyname field !<br>";
+            $signupAttack = $attack;
+            echo "\n" . $fnameSignupErr;
         } else {
             $fnameSignup = test_input($_POST["family-name"]);
 
-
         }
 
-        if (empty($_POST["email"])) {
-            $emailSignupErr = "email is required";
+        if (empty($emailSignupPost = $_POST["email"])) {
+            $emailSignupErErr = "email is required";
+        } elseif (($attack = analyze_attack($emailSignupPost)) != "") {
+            $emailSignupEr = "we have $attack attack in email field !<br>";
+            $signupAttack = $attack;
+            echo "\n" . $emailSignupErErr;
         } else {
             $emailSignup = test_input($_POST["email"]);
-
-
         }
 
-        if (empty($_POST["password"])) {
+        if (empty($passSignupPost = $_POST["password"])) {
             $passSignupErr = "password is required";
+        } elseif (($attack = analyze_attack($passSignupPost)) != "") {
+            $passSignupErr = "we have $attack attack in password field !<br>";
+            $signupAttack = $attack;
+            echo "\n" . $passSignupErr;
         } else {
             $passSignup = test_input($_POST["password"]);
-
-
         }
 
-        if (empty($_POST["username"])) {
+        if (empty($usernameSignupPost = $_POST["username"])) {
             $usernameSignupErr = "username is required";
+        } elseif (($attack = analyze_attack($usernameSignupPost)) != "") {
+            $usernameSignupErr = "we have $attack attack in username field !<br>";
+            $signupAttack = $attack;
+            echo "\n" . $usernameSignupErr;
         } else {
             $usernameSignup = test_input($_POST["username"]);
 
 
         }
-
-        if (!(empty($emailSignup) || empty($passSignup) || empty($usernameSignup))) {
+        if (!(empty($emailSignup) || empty($passSignup) || empty($usernameSignup))
+            && empty($nameSignupErr) && empty($fnameSignupErr)
+        ) {
 
             /*
                         $sql = "INSERT INTO users (name, family,username,password, email)
@@ -160,6 +208,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         }
                         $conn->close();
             */
+
 
             try {
 
@@ -184,11 +233,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } catch (PDOException $e) {
                 echo $sql . "<br>" . $e->getMessage();
             }
-        } else echo "فیلدهای لازم پر شوند.";
+        } else {
+            if ($signupAttack == "") echo "فیلدهای لازم پر شوند.";
+            else {
+                echo "we handled the attack <br>";
+                echo "the attacker's description is : <br>";
+                echo $_SERVER['REMOTE_ADDR'];
+
+            }
+        }
     }
+
 }
-
-
 ?>
 
 
@@ -217,7 +273,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <div id="login-tab-content">
             <form class="login-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                <input type="text" class="input" name="login_email" id="login_email" autocomplete="off"
+                <input type="text" class="input" name="login_email" id="login_email" autocomplete="on"
                        placeholder="ایمیل">
                 <input type="password" class="input" name="login_pass" id="login_pass" autocomplete="off"
                        placeholder="رمز عبور">

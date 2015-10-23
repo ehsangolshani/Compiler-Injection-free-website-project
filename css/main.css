@@ -1,10 +1,12 @@
 /* ============================================================
   PRIMARY STRUCTURE
 ============================================================ */
-.container {
-    max-width: 960px;
+.centered {
+    text-align: center;
     margin: 0 auto;
+    float: none !important;
 }
+
 
 /* ============================================================
   S
@@ -42,7 +44,7 @@
 }
 
 .module.parallax h1 {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.7);
     font-size: 48px;
     line-height: 600px;
     font-weight: 700;
@@ -61,6 +63,10 @@
 
 .module.parallax-3 {
     background-image: url("../img/c.jpg");
+}
+
+.module.parallax-4 {
+    background-image: url("../img/a.jpg");
 }
 
 @media all and (min-width: 600px) {
