@@ -37,12 +37,12 @@ include 'includes/logout_func.php';
 
                         <form action="xss-test.php" method="GET">
                             reflected xss testing : <input type="text" name="search">
-                            <input type="submit" value="submit">
+                            <input type="submit" value="submit your search">
                         </form>
 
                         <form action="directory-traversal.php" method="GET">
                             directory traversal testing : <input type="text" name="search">
-                            <input type="submit" value="submit">
+                            <input type="submit" value="submit directory address">
                         </form>
 
                         <?php

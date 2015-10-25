@@ -20,7 +20,7 @@ function analyze_attack($data)
     |(REVOKE)|(UNION)|(&&)|(&>)|(&<)|(DROP)|(ALTER)|(=)|(==)/i", $data)) {
         $attack1 = "sql injection";
     } elseif (preg_match("/(<script>)|(HTML)|(BODY)|(DIV)|(<h.>)|(onclick)
-    |(onchange)|(ondblclick)|(onmouse)|(onselect)|(onsubmit)|(onload)|(alert()|(style)/i", $data)) {
+|(onchange)|(ondblclick)|(onmouse)|(onselect)|(onsubmit)|(onload)|(alert)|(style)/i", $data)) {
         $attack1 = "xss attack (stored)";
     }
     return $attack1;

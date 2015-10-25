@@ -20,7 +20,7 @@ function analyze_attack($data)
 {
     $attack1 = "";
     if (preg_match("/(<script>)|(HTML)|(BODY)|(DIV)|(<h.>)|(onclick)
-    |(onchange)|(ondblclick)|(onmouse)|(onselect)|(onsubmit)|(onload)|(alert()|(style)/i", $data)) {
+    |(onchange)|(ondblclick)|(onmouse)|(onselect)|(onsubmit)|(onload)|(alert)|(style)/i", $data)) {
         $attack1 = "xss attack (reflected)";
     }
     return $attack1;
@@ -43,8 +43,10 @@ function analyze_attack($data)
             $attack = "";
 
             if (isset($_REQUEST['search'])) {
+
                 $searched = $_GET['search'];
-                if ($attack = analyze_attack($searched) == "") {
+                //echo $searched;
+                if (($attack = analyze_attack($searched)) == "") {
                     echo "you searched : <br>";
                     echo "<h3>" . $_GET['search'] . "</h3>";
                 } else {

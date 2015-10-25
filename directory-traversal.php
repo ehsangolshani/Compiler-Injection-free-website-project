@@ -1,4 +1,4 @@
-html>
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
@@ -19,9 +19,10 @@ html>
 function analyze_attack($data)
 {
     $attack1 = "";
-    if (preg_match("/(../)|(..)/i", $data)) {
+    if (preg_match("/(\.\.)/i", $data)) {
         $attack1 = "directory traversal ";
     }
+
     return $attack1;
 
 }
@@ -43,7 +44,7 @@ function analyze_attack($data)
 
             if (isset($_REQUEST['search'])) {
                 $searched = $_GET['search'];
-                if ($attack = analyze_attack($searched) == "") {
+                if (($attack = analyze_attack($searched)) == "") {
                     echo "file or directory name you searched : <br>";
                     echo "<h3>" . $_GET['search'] . "</h3>";
                 } else {
