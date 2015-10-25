@@ -98,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 //$conn->exec($sql);
 
                 $results = $sql->fetch(PDO::FETCH_ASSOC);
-                //print_r($results);
+
 
                 if ($sql->rowCount() > 0) {
                     echo "آفرین شما عضو هستید!";
@@ -111,7 +111,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     setcookie("first-name", $results['name'], time() + 1800, "/");
                     setcookie("family-name", $results['family'], time() + 1800, "/");
 
-                    print_r($_COOKIE);
 
                 } else {
                     echo "شما عضو این سایت نیستید . لطفا ثبت نام کنید!";

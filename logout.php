@@ -6,7 +6,7 @@ $http_ref = $_SERVER['HTTP_REFERER'];
 
 if ($http_ref == "") {
 
-    echo "<script>alert('1this request is from another website , it can be a CSRF attack !')</script>";
+    echo "<script>alert('this request is from another website , it can be a CSRF attack !')</script>";
 
 } else {
     if (strpos($http_ref, "compiler%20security%20site%20project")) {
@@ -14,7 +14,7 @@ if ($http_ref == "") {
         logout();
         header('Location: index.php');
     } else {
-        echo "<script>alert('2this request is from another website , it can be a CSRF attack !')</script>";
+        echo "<script>alert('this request is from another website , it can be a CSRF attack !')</script>";
     }
 }
 

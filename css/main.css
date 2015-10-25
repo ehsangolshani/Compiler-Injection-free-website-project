@@ -7,7 +7,6 @@
     float: none !important;
 }
 
-
 /* ============================================================
   S
 ============================================================ */
@@ -39,15 +38,15 @@
     height: 600px;
     background-position: 50% 50%;
     background-repeat: no-repeat;
-    background-attachment:fixed;
+    background-attachment: fixed;
     background-size: cover;
 }
 
 .module.parallax h1 {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 48px;
-    line-height: 600px;
-    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 38px;
+    line-height: 500px;
+    font-weight: 600;
     text-align: center;
     text-transform: uppercase;
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -66,7 +65,7 @@
 }
 
 .module.parallax-4 {
-    background-image: url("../img/a.jpg");
+    background-image: url("../img/d.jpg");
 }
 
 @media all and (min-width: 600px) {
@@ -79,12 +78,16 @@
     }
 
     .module.parallax h1 {
-        font-size: 96px;
+        font-size: 90px;
     }
+}
+
+h1,h2,h3,h4,h5,h6{
+    margin-top: 0px !important;
 }
 
 @media all and (min-width: 960px) {
     .module.parallax h1 {
-        font-size: 160px;
+        font-size: 150px;
     }
 }
