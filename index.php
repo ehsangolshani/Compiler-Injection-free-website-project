@@ -36,7 +36,12 @@ include 'includes/logout_func.php';
                         <h2>Lorem Ipsum Dolor</h2>
 
                         <form action="xss-test.php" method="GET">
-                            search : <input type="text" name="search">
+                            reflected xss testing : <input type="text" name="search">
+                            <input type="submit" value="submit">
+                        </form>
+
+                        <form action="directory-traversal.php" method="GET">
+                            directory traversal testing : <input type="text" name="search">
                             <input type="submit" value="submit">
                         </form>
 
