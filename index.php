@@ -1,3 +1,7 @@
+<?php
+include 'includes/logout_func.php';
+?>
+
 <html>
 <head>
     <meta charset="UTF-8">
@@ -36,7 +40,20 @@
                             <input type="submit" value="submit">
                         </form>
 
-                        <a href="login.php">click to login</a>
+                        <?php
+                        if (count($_COOKIE) > 0) {
+                            echo "<h3>you are logged in !</h3>";
+                            print_r($_COOKIE);
+                        } else {
+                            echo "<h3>you are not logged in</h3>";
+                        }
+                        ?>
+                        <br>
+                        <a class="btn btn-info" role="button" href="login.php">click to login</a>
+                        <br>
+                        <br>
+                        <a class="btn btn-warning" role="button" href="logout.php">click to logout</a>
+                        <br>
 
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit
                             Lorem ipsum dolor sit amet, consectetur adipisicing elit

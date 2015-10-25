@@ -156,3 +156,7 @@ body {
 input.input {
     text-align: right;
 }
+
+.tabs-content {
+    text-align: center;
+}

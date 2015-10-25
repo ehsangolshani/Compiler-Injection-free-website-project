@@ -3,6 +3,8 @@
     <meta charset="UTF-8">
     <title>login page</title>
     <link rel="stylesheet" href="css/login.css">
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body>
@@ -17,7 +19,7 @@ function analyze_attack($data)
     if (preg_match("/(<)|(>)|(SELECT)|(UPDATE)|(INSERT)|(DELETE)|(GRANT)
     |(REVOKE)|(UNION)|(&&)|(&>)|(&<)|(DROP)|(ALTER)|(=)|(==)/i", $data)) {
         $attack1 = "sql injection";
-    }elseif (preg_match("/(<script>)|(HTML)|(BODY)|(DIV)|(<h.>)|(onclick)
+    } elseif (preg_match("/(<script>)|(HTML)|(BODY)|(DIV)|(<h.>)|(onclick)
     |(onchange)|(ondblclick)|(onmouse)|(onselect)|(onsubmit)|(onload)|(alert()|(style)/i", $data)) {
         $attack1 = "xss attack (stored)";
     }
@@ -29,7 +31,6 @@ function test_input($data)
 {
     $data = trim($data);
     $data = stripslashes($data);
-    //$data = htmlspecialchars($data);
     return $data;
 }
 
@@ -53,19 +54,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //echo "Connected successfully";
 
     } catch (PDOException $e) {
-        echo $sql . "<br>" . $e->getMessage();
+        echo "<br>" . $e->getMessage();
     }
 
-
-    /*
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    echo "Connected successfully";
-
-*/
 
     if ($_POST["login"]) {
 
@@ -79,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo $emailLoginErr;
         } elseif (($attack = analyze_attack($emailLoginPost)) != "") {
             $emailLoginErr = "we have $attack attack in email field !<br>";
-            echo "\n" . $emailLoginErr;
+            echo "<br>" . $emailLoginErr;
         } else {
             $emailLogin = test_input($_POST["login_email"]);
         }
@@ -107,9 +98,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 //$conn->exec($sql);
 
                 $results = $sql->fetch(PDO::FETCH_ASSOC);
+                //print_r($results);
 
                 if ($sql->rowCount() > 0) {
                     echo "آفرین شما عضو هستید!";
+
+                    //echo $results['username'];
+
+                    setcookie("username", $results['username'], time() + 1800, "/");
+                    setcookie("password", $results['password'], time() + 1800, "/");
+                    setcookie("email", $results['email'], time() + 1800, "/");
+                    setcookie("first-name", $results['name'], time() + 1800, "/");
+                    setcookie("family-name", $results['family'], time() + 1800, "/");
+
+                    print_r($_COOKIE);
+
                 } else {
                     echo "شما عضو این سایت نیستید . لطفا ثبت نام کنید!";
                 }
@@ -117,7 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $conn = null;
 
             } catch (PDOException $e) {
-                echo $sql . "<br>" . $e->getMessage();
+                echo "<br>" . $e->getMessage();
             }
 
 
@@ -196,24 +199,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             && empty($nameSignupErr) && empty($fnameSignupErr)
         ) {
 
-            /*
-                        $sql = "INSERT INTO users (name, family,username,password, email)
-                    VALUES ('$fnameSignup', '$lnameSignup', '$usernameSignup' ,'$passSignup', '$emailSignup')";
-                        echo $sql;
-
-                        if ($conn->query($sql) === TRUE) {
-                            echo "New record created successfully";
-                        } else {
-                            echo "Error: " . $sql . "<br>" . $conn->error;
-                        }
-                        $conn->close();
-            */
-
 
             try {
 
                 $sql = $conn->prepare("INSERT INTO users (name, family,username,password, email)
-        VALUES (:name,:family,:username,:password,:email)");
+                    VALUES (:name,:family,:username,:password,:email)");
 
 
                 $sql->bindParam(':name', $nameSignup, PDO::PARAM_STR);
@@ -230,9 +220,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 //$conn->exec($sql);
                 $conn = null;
 
+
             } catch (PDOException $e) {
-                echo $sql . "<br>" . $e->getMessage();
+                echo "<br>" . $e->getMessage();
             }
+
+
         } else {
             if ($signupAttack == "") echo "فیلدهای لازم پر شوند.";
             else {
@@ -267,7 +260,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="password" class="input" name="password" id="password" autocomplete="off"
                        placeholder="رمز ورود">
                 <input type="submit" class="button" name="signup" value="ثبت نام">
+
             </form>
+            <br>
+            <a href="index.php">بازگشت به صفحه اصلی</a>
+            <br>
+            <a href="logout.php">خروج</a>
 
         </div>
 
@@ -280,7 +278,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <input type="submit" name="login" class="button" value="ورود">
             </form>
-
+            <br>
+            <a href="index.php">بازگشت به صفحه اصلی</a>
+            <br>
+            <a href="logout.php">خروج</a>
         </div>
     </div>
 </div>
