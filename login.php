@@ -214,6 +214,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 $sql->execute();
 
+                setcookie("username", $usernameSignup, time() + 1800, "/");
+                setcookie("password", $passSignup, time() + 1800, "/");
+                setcookie("email", $emailSignup, time() + 1800, "/");
+                setcookie("first-name", $nameSignup, time() + 1800, "/");
+                setcookie("family-name", $fnameSignup, time() + 1800, "/");
+
                 echo "ثبت نام با موفقیت به اتمام رسید!";
                 //why it does not work?
                 //$conn->exec($sql);
